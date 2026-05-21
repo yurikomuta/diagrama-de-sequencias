@@ -1,0 +1,28 @@
+@startuml Agendamento
+actor Paciente
+boundary AppSaude
+control SistemaAgendamento
+control OperadoraConvenio
+
+Paciente -> AppSaude: Selecionar especialidade e médico
+activate AppSaude
+AppSaude -> SistemaAgendamento: Buscar horários livres()
+activate SistemaAgendamento
+SistemaAgendamento --> AppSaude: Lista de horários
+deactivate SistemaAgendamento
+Paciente -> AppSaude: Confirmar horário e selecionar tipo de pagamento
+
+opt Paciente utiliza Convênio Médico
+    AppSaude -> OperadoraConvenio: Validar elegibilidade(carteirinha)
+    activate OperadoraConvenio
+    OperadoraConvenio --> AppSaude: Status elegível
+    deactivate OperadoraConvenio
+end
+
+AppSaude -> SistemaAgendamento: Finalizar agendamento()
+activate SistemaAgendamento
+SistemaAgendamento --> AppSaude: Consulta confirmada
+deactivate SistemaAgendamento
+AppSaude --> Paciente: Exibir tela de sucesso
+deactivate AppSaude
+@enduml
