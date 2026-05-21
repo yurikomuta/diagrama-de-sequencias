@@ -1,0 +1,31 @@
+@startuml Apagar Conta
+actor Usuario
+boundary InterfaceRedeSocial
+control ControladorSeguranca
+participant "Perfil: UsuarioLogado" as Perfil
+
+Usuario -> InterfaceRedeSocial: Clicar em "Excluir Conta Permanentemente"
+activate InterfaceRedeSocial
+InterfaceRedeSocial -> ControladorSeguranca: Solicitar exclusão()
+activate ControladorSeguranca
+ControladorSeguranca --> InterfaceRedeSocial: Pedir confirmação final
+deactivate ControladorSeguranca
+
+Usuario -> InterfaceRedeSocial: Confirmar exclusão definitiva
+InterfaceRedeSocial -> ControladorSeguranca: Confirmar exclusão()
+activate ControladorSeguranca
+
+ControladorSeguranca -> ControladorSeguranca: Deletar dados do banco
+
+ControladorSeguranca -> Perfil: Limpar sessões ativas()
+activate Perfil
+deactivate Perfil
+
+ControladorSeguranca -> Perfil: destroy
+destroy Perfil
+
+ControladorSeguranca --> InterfaceRedeSocial: Conta excluída
+deactivate ControladorSeguranca
+InterfaceRedeSocial --> Usuario: Tela de despedida (Deslogado)
+deactivate InterfaceRedeSocial
+@enduml
