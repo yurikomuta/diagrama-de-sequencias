@@ -1,0 +1,23 @@
+@startuml Controle Inteligente
+entity SensorTemperatura
+control ControladorAmbiente
+entity CompressorResfriamento
+
+loop A cada 5 minutos (Infinito)
+    SensorTemperatura -> ControladorAmbiente: Enviar leitura atual(temperatura)
+    activate ControladorAmbiente
+    
+    alt temperatura > 22°C
+        ControladorAmbiente -> CompressorResfriamento: Ativar compressor()
+        activate CompressorResfriamento
+        CompressorResfriamento --> ControladorAmbiente: Compressor rodando
+        deactivate CompressorResfriamento
+    else temperatura < 18°C
+        ControladorAmbiente -> CompressorResfriamento: Desligar compressor()
+        activate CompressorResfriamento
+        CompressorResfriamento --> ControladorAmbiente: Compressor parado
+        deactivate CompressorResfriamento
+    end
+    deactivate ControladorAmbiente
+end
+@enduml
