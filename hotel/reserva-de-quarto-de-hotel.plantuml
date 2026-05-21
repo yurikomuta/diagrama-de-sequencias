@@ -1,0 +1,27 @@
+@startuml Hotel
+actor Cliente
+boundary SiteHotel
+control SistemaReserva
+database BancoDados
+
+Cliente -> SiteHotel: Escolher datas da estadia
+activate SiteHotel
+SiteHotel -> SistemaReserva: Verificar disponibilidade(datas)
+activate SistemaReserva
+SistemaReserva -> BancoDados: Consultar quartos ocupados
+activate BancoDados
+BancoDados --> SistemaReserva: Lista de status dos quartos
+deactivate BancoDados
+
+alt Quarto Disponível
+    SistemaReserva -> BancoDados: Reservar quarto temporariamente
+    SistemaReserva -> SistemaReserva: Enviar e-mail de pré-reserva()
+    SistemaReserva --> SiteHotel: Confirmar pré-reserva
+    SiteHotel --> Cliente: Exibir sucesso e instruções
+else Quarto Lotado
+    SistemaReserva --> SiteHotel: Indisponível
+    deactivate SistemaReserva
+    SiteHotel --> Cliente: Sugerir novas datas automaticamente
+    deactivate SiteHotel
+end
+@enduml
