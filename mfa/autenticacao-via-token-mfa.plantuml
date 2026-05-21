@@ -1,0 +1,17 @@
+@startuml Autenticação MFA
+actor Usuario
+boundary SistemaWeb
+control APISMS
+
+Usuario -> SistemaWeb: Digitar senha
+activate SistemaWeb
+SistemaWeb -> SistemaWeb: Validar dados iniciais
+SistemaWeb -> APISMS: Solicitar envio de token(celular)
+activate APISMS
+APISMS --> Usuario: Enviar SMS com token
+deactivate APISMS
+Usuario -> SistemaWeb: Digitar token recebido
+SistemaWeb -> SistemaWeb: Validar o token recebido
+SistemaWeb --> Usuario: Conceder acesso ao sistema 
+deactivate SistemaWeb
+@enduml
