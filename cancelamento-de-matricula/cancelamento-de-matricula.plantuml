@@ -1,0 +1,16 @@
+@startuml Cancelamento de Matrícula 
+actor Aluno
+boundary Portal
+control SistemaAcademico
+
+Aluno -> Portal: Clicar em "Cancelar Disciplina"
+activate Portal
+Portal -> SistemaAcademico: Solicitar cancelamento(alunoId, disciplinaId)
+activate SistemaAcademico
+SistemaAcademico -> SistemaAcademico: Validar prazo letivo
+SistemaAcademico -> SistemaAcademico: Remover aluno da lista
+SistemaAcademico --> Portal: Confirmar cancelamento
+deactivate SistemaAcademico
+Portal --> Aluno: Exibir mensagem de sucesso
+deactivate Portal
+@enduml
