@@ -1,0 +1,26 @@
+@startuml AppDelivery
+actor Cliente
+boundary AppDelivery
+control GatewayPagamento
+control OperadoraCartao
+
+Cliente -> AppDelivery: Finalizar pedido
+activate AppDelivery
+AppDelivery -> GatewayPagamento: Solicitar cobrança(cartao, valor)
+activate GatewayPagamento
+GatewayPagamento -> OperadoraCartao: Consultar limite/autorização
+activate OperadoraCartao
+OperadoraCartao --> GatewayPagamento: Resposta da autorização
+deactivate OperadoraCartao
+
+alt Pagamento Aprovado
+    GatewayPagamento --> AppDelivery: Sucesso no pagamento
+    AppDelivery -> AppDelivery: Notificar restaurante
+    AppDelivery --> Cliente: Exibir confirmação do pedido
+else Pagamento Recusado
+    GatewayPagamento --> AppDelivery: Falha (Sem limite/Erro)
+    deactivate GatewayPagamento
+    AppDelivery --> Cliente: Exibir erro de pagamento e cancelar pedido
+    deactivate AppDelivery
+end
+@enduml
