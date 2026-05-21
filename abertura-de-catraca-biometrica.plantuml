@@ -1,0 +1,15 @@
+@startuml Catraca
+actor Funcionario
+boundary LeitorBiometrico
+control ServidorSeguranca
+
+Funcionario -> LeitorBiometrico: Posicionar dedo no leitor
+activate LeitorBiometrico
+LeitorBiometrico -> ServidorSeguranca: Enviar imagem digital()
+activate ServidorSeguranca
+ServidorSeguranca -> ServidorSeguranca: Buscar ID e verificar cadastro
+ServidorSeguranca --> LeitorBiometrico: Comando de liberação física
+deactivate ServidorSeguranca
+LeitorBiometrico --> Funcionario: Liberar passagem (Catraca abre)
+deactivate LeitorBiometrico
+@enduml
