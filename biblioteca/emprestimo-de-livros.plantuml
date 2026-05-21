@@ -1,0 +1,23 @@
+@startuml Gerenciamento de empréstimo
+actor Atendente
+boundary SistemaBiblioteca
+control GerenciadorEmprestimos
+
+Atendente -> SistemaBiblioteca: Registrar devolução(livroID, alunoID)
+activate SistemaBiblioteca
+SistemaBiblioteca -> GerenciadorEmprestimos: Calcular dias de atraso()
+activate GerenciadorEmprestimos
+
+alt Devolução no prazo
+    GerenciadorEmprestimos -> GerenciadorEmprestimos: Encerrar empréstimo
+    GerenciadorEmprestimos --> SistemaBiblioteca: Sucesso (Sem pendências)
+else Livro Atrasado
+    GerenciadorEmprestimos -> GerenciadorEmprestimos: Calcular valor da multa
+    GerenciadorEmprestimos -> GerenciadorEmprestimos: Bloquear novos empréstimos
+    GerenciadorEmprestimos --> SistemaBiblioteca: Multa gerada (Bloqueado)
+    deactivate GerenciadorEmprestimos
+end
+
+SistemaBiblioteca --> Atendente: Exibir status final do aluno
+deactivate SistemaBiblioteca
+@enduml
