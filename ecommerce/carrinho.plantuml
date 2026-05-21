@@ -1,0 +1,30 @@
+@startuml processamento do carrinho
+actor Cliente
+boundary Ecommerce
+control GerenciadorVendas
+database Estoque
+
+Cliente -> Ecommerce: Clicar em "Fechar Pedido"
+activate Ecommerce
+Ecommerce -> GerenciadorVendas: Processar carrinho(itens)
+activate GerenciadorVendas
+
+loop Para cada produto no carrinho
+    GerenciadorVendas -> Estoque: Consultar quantidade(produtoID)
+    activate Estoque
+    Estoque --> GerenciadorVendas: Quantidade disponível
+    deactivate Estoque
+    
+    GerenciadorVendas -> GerenciadorVendas: Verificar compatibilidade
+    
+    GerenciadorVendas -> Estoque: Baixar temporariamente o saldo()
+    activate Estoque
+    Estoque --> GerenciadorVendas: Saldo atualizado
+    deactivate Estoque
+end
+
+GerenciadorVendas --> Ecommerce: Carrinho validado com sucesso
+deactivate GerenciadorVendas
+Ecommerce --> Cliente: Redirecionar para o pagamento
+deactivate Ecommerce
+@enduml
